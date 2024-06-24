@@ -6,42 +6,46 @@ Console.WriteLine("=========================");
 Console.Write("Please enter the operator: ");
 string arithmeticOperator = Console.ReadLine();
 
-Console.Write("Enter the first number: ");
-int firstNumber = int.Parse(Console.ReadLine());
+Console.Write("How many numbers do you want to {0}?: ", arithmeticOperator);
+int numOfOperands = int.Parse(Console.ReadLine());
 
-Console.Write("Enter the second number: ");
-int secondNumber = int.Parse(Console.ReadLine());
+int[] operands = new int[numOfOperands];
+
+for (int i = 0; i < operands.Length; i++)
+{
+    Console.Write("Please enter number {0}: ", (i + 1));
+    operands[i] = int.Parse(Console.ReadLine());
+}
 
 int result = 0;
 
-// if (arithmeticOperator == "+")
-//     result = firstNumber + secondNumber;
-// else if (arithmeticOperator == "-")
-//     result = firstNumber - secondNumber;
-// else if (arithmeticOperator == "*")
-//     result = firstNumber * secondNumber;
-// else if (arithmeticOperator == "/")
-//     result = firstNumber / secondNumber;
-// else
-//     Console.WriteLine("Operator {0} is invalid.", arithmeticOperator);
-
-switch (arithmeticOperator)
+foreach (int operand in operands)
 {
-    case "+":
-        result = firstNumber + secondNumber;
-        break;
-    case "-":
-        result = firstNumber - secondNumber;
-        break;
-    case "*":
-        result = firstNumber * secondNumber;
-        break;
-    case "/":
-        result = firstNumber / secondNumber;
-        break;
-    default:
-        Console.WriteLine("Operator {0} is invalid.", arithmeticOperator);
-        break;
+    // Set up result initially
+    if (result == 0)
+    {
+        result = operand;
+        continue;
+    }
+
+    switch (arithmeticOperator)
+    {
+        case "+":
+            result += operand;
+            break;
+        case "-":
+            result -= operand;
+            break;
+        case "*":
+            result *= operand;
+            break;
+        case "/":
+            result /= operand;
+            break;
+        default:
+            Console.WriteLine("Operator {0} is invalid.", arithmeticOperator);
+            break;
+    }
 }
 
 Console.WriteLine("The answer is: " + result);
