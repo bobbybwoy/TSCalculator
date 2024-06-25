@@ -2,21 +2,21 @@
 
 class Program
 {
+    private const int NumberCalculator = 1;
+    private const int DateCalculator = 2;
     public static void Main(string[] args)
     {
         PrintWelcomeMessage();
 
         while (true)
         {
-            string arithmeticOperator = GetOperator();
-            if (arithmeticOperator == ".")
+            int calculatorMode = GetCalculatorMode();
+            if (calculatorMode == NumberCalculator)
+                PerformNumberCalculation();
+            else if (calculatorMode == DateCalculator)
+                PerformDateCalculation();
+            else
                 break;
-
-            int numberOfOperands = GetNumberOfOperands(arithmeticOperator);
-
-            int[] operands = GetOperands(numberOfOperands);
-
-            PerformCalculation(arithmeticOperator, operands);
         }
     }
 
@@ -24,7 +24,39 @@ class Program
     {
         Console.WriteLine("Welcome to the calculator");
         Console.WriteLine("=========================");
-        Console.WriteLine("To quit, type '.' at operator prompt.");
+    }
+
+    private static int GetCalculatorMode()
+    {
+        int calculatorMode = 0;
+        Console.WriteLine("Choose calculator mode:");
+        Console.WriteLine("\t1) Numbers");
+        Console.WriteLine("\t2) Dates");
+        Console.WriteLine("\t3) Exit");
+        int.TryParse(Console.ReadLine(), out calculatorMode);
+        return calculatorMode;
+    }
+
+    private static void PerformNumberCalculation()
+    {
+        string arithmeticOperator = GetOperator();
+
+        int numberOfOperands = GetNumberOfOperands(arithmeticOperator);
+
+        int[] operands = GetOperands(numberOfOperands);
+
+        Console.WriteLine($"The answer is: {CalculateValue(arithmeticOperator, operands)}");
+        Console.ReadLine();
+    }
+
+    private static void PerformDateCalculation()
+    {
+        DateTime inputDate = GetInputDate();
+
+        int numberOfDaysToAdd = GetNumberOfDaysToAdd();
+
+        Console.WriteLine($"The answer is: {CalculateDate(inputDate, numberOfDaysToAdd).ToShortDateString()}");
+        Console.ReadLine();
     }
 
     private static string GetOperator()
@@ -36,7 +68,7 @@ class Program
 
     private static int GetNumberOfOperands(string arithmeticOperator)
     {
-        int numberOfOperands = GetInteger("How many number do you want to " + arithmeticOperator + "?: ");
+        int numberOfOperands = GetInteger($"How many number do you want to {arithmeticOperator}?: ");
         return numberOfOperands;
     }
 
@@ -46,13 +78,13 @@ class Program
 
         for (int i = 0; i < operands.Length; i++)
         {
-            operands[i] = GetInteger("Please enter number " + (i + 1) + ": ");
+            operands[i] = GetInteger($"Please enter number {i + 1}: ");
         }
 
         return operands;
     }
 
-    private static void PerformCalculation(string arithmeticOperator, int[] operands)
+    private static int CalculateValue(string arithmeticOperator, int[] operands)
     {
         int result = 0;
 
@@ -74,11 +106,10 @@ class Program
             else if (arithmeticOperator == "/")
                 result /= operand;
             else
-                Console.WriteLine("Operator {0} is invalid.", arithmeticOperator);
+                Console.WriteLine($"Operator {arithmeticOperator} is invalid.");
         }
 
-        Console.WriteLine("The answer is: " + result);
-        Console.ReadLine();
+        return result;
     }
 
     private static int GetInteger(string message)
@@ -90,5 +121,33 @@ class Program
             if (int.TryParse(Console.ReadLine(), out number))
                 return number;
         }
+    }
+
+    private static DateTime GetInputDate()
+    {
+        DateTime inputDate;
+        while (true)
+        {
+            Console.Write("Please enter a date: ");
+            if (DateTime.TryParse(Console.ReadLine(), out inputDate))
+                return inputDate;
+        }
+    }
+
+    private static int GetNumberOfDaysToAdd()
+    {
+        int numberOfDaysToAdd = 0;
+        Console.Write("Please enter the number of days to add: ");
+        while (true)
+        {
+            if (int.TryParse(Console.ReadLine(), out numberOfDaysToAdd))
+                return numberOfDaysToAdd;
+        }
+    }
+
+    private static DateTime CalculateDate(DateTime inputDate, int numberOfDaysToAdd)
+    {
+
+        return inputDate.AddDays(numberOfDaysToAdd);
     }
 }
