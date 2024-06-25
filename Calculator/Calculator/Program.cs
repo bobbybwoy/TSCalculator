@@ -1,52 +1,94 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿namespace Calculator;
 
-Console.WriteLine("Welcome to the calculator");
-Console.WriteLine("=========================");
-
-Console.Write("Please enter the operator: ");
-string arithmeticOperator = Console.ReadLine();
-
-Console.Write("How many numbers do you want to {0}?: ", arithmeticOperator);
-int numOfOperands = int.Parse(Console.ReadLine());
-
-int[] operands = new int[numOfOperands];
-
-for (int i = 0; i < operands.Length; i++)
+class Program
 {
-    Console.Write("Please enter number {0}: ", (i + 1));
-    operands[i] = int.Parse(Console.ReadLine());
-}
-
-int result = 0;
-
-foreach (int operand in operands)
-{
-    // Set up result initially
-    if (result == 0)
+    public static void Main(string[] args)
     {
-        result = operand;
-        continue;
+        PrintWelcomeMessage();
+
+        while (true)
+        {
+            string arithmeticOperator = GetOperator();
+            if (arithmeticOperator == ".")
+                break;
+
+            int numberOfOperands = GetNumberOfOperands(arithmeticOperator);
+
+            int[] operands = GetOperands(numberOfOperands);
+
+            PerformCalculation(arithmeticOperator, operands);
+        }
     }
 
-    switch (arithmeticOperator)
+    private static void PrintWelcomeMessage()
     {
-        case "+":
-            result += operand;
-            break;
-        case "-":
-            result -= operand;
-            break;
-        case "*":
-            result *= operand;
-            break;
-        case "/":
-            result /= operand;
-            break;
-        default:
-            Console.WriteLine("Operator {0} is invalid.", arithmeticOperator);
-            break;
+        Console.WriteLine("Welcome to the calculator");
+        Console.WriteLine("=========================");
+        Console.WriteLine("To quit, type '.' at operator prompt.");
+    }
+
+    private static string GetOperator()
+    {
+        Console.Write("Please enter the operator: ");
+        string arithmeticOperator = Console.ReadLine();
+        return arithmeticOperator;
+    }
+
+    private static int GetNumberOfOperands(string arithmeticOperator)
+    {
+        int numberOfOperands = GetInteger("How many number do you want to " + arithmeticOperator + "?: ");
+        return numberOfOperands;
+    }
+
+    private static int[] GetOperands(int numberOfOperands)
+    {
+        int[] operands = new int[numberOfOperands];
+
+        for (int i = 0; i < operands.Length; i++)
+        {
+            operands[i] = GetInteger("Please enter number " + (i + 1) + ": ");
+        }
+
+        return operands;
+    }
+
+    private static void PerformCalculation(string arithmeticOperator, int[] operands)
+    {
+        int result = 0;
+
+        foreach (int operand in operands)
+        {
+            // Set up result to be the first operand
+            if (result == 0)
+            {
+                result = operand;
+                continue;
+            }
+
+            if (arithmeticOperator == "+")
+                result += operand;
+            else if (arithmeticOperator == "-")
+                result -= operand;
+            else if (arithmeticOperator == "*")
+                result *= operand;
+            else if (arithmeticOperator == "/")
+                result /= operand;
+            else
+                Console.WriteLine("Operator {0} is invalid.", arithmeticOperator);
+        }
+
+        Console.WriteLine("The answer is: " + result);
+        Console.ReadLine();
+    }
+
+    private static int GetInteger(string message)
+    {
+        int number = 0;
+        while (true)
+        {
+            Console.Write(message);
+            if (int.TryParse(Console.ReadLine(), out number))
+                return number;
+        }
     }
 }
-
-Console.WriteLine("The answer is: " + result);
-Console.ReadLine();
