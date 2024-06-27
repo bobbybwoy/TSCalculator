@@ -8,17 +8,18 @@ class Program
 
     public static void Main(string[] args)
     {
+        CalculatorLogger logger = new CalculatorLogger();
+        
+        NumberCalculator numberCalculator = new NumberCalculator(logger);
+        DateCalculator dateCalculator = new DateCalculator(logger);
+        
         PrintWelcomeMessage();
-        NumberCalculator numberCalculator = new NumberCalculator();
-        DateCalculator dateCalculator = new DateCalculator();
 
         while (true)
         {
             int calculatorMode = GetCalculatorMode();
+            
             if (calculatorMode == NumberCalculator)
-                // I also used Rider to refactor the functionality into
-                // separate classes, which is why the namespace is the
-                // way it is...
                 numberCalculator.PerformNumberCalculation();
             else if (calculatorMode == DateCalculator)
                 dateCalculator.PerformDateCalculation();

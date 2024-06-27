@@ -2,6 +2,13 @@ namespace Calculator;
 
 class NumberCalculator
 {
+    private CalculatorLogger Logger { get; set; }
+    
+    public NumberCalculator(CalculatorLogger logger)
+    {
+        Logger = logger;
+    }
+    
     public void PerformNumberCalculation()
     {
         string arithmeticOperator = GetOperator();
@@ -16,8 +23,15 @@ class NumberCalculator
 
     private string GetOperator()
     {
-        Console.Write("Please enter the operator: ");
-        string arithmeticOperator = Console.ReadLine();
+        string[] operators = new string[] { "+", "-", "*", "/" };
+        string arithmeticOperator = "";
+
+        do
+        {
+            Console.Write("Please enter the operator: ");
+            arithmeticOperator = Console.ReadLine();
+        } while (!operators.Contains(arithmeticOperator));
+        
         return arithmeticOperator;
     }
 
@@ -47,12 +61,8 @@ class NumberCalculator
         {
             // Set up result to be the first operand
             if (result == 0)
-            {
                 result = operand;
-                continue;
-            }
-
-            if (arithmeticOperator == "+")
+            else if (arithmeticOperator == "+")
                 result += operand;
             else if (arithmeticOperator == "-")
                 result -= operand;
@@ -63,6 +73,8 @@ class NumberCalculator
             else
                 Console.WriteLine($"Operator {arithmeticOperator} is invalid.");
         }
+
+        LogCalculation(arithmeticOperator, operands, result);
 
         return result;
     }
@@ -77,5 +89,19 @@ class NumberCalculator
         } while (!int.TryParse(Console.ReadLine(), out number));
 
         return number;
+    }
+
+    private void LogCalculation(string arithmeticOperator, int[] operands, int result)
+    {
+        string logMessage = $"Operator: {arithmeticOperator}; Operands:";
+
+        foreach (int operand in operands)
+        {
+                logMessage += $" {operand}";
+        }
+
+        logMessage += $"; Result: {result}";
+        
+        Logger.WriteLog("NumberCalculator", logMessage);
     }
 }

@@ -2,6 +2,13 @@ namespace Calculator;
 
 class DateCalculator
 {
+    public CalculatorLogger Logger { get; set; }
+    
+    public DateCalculator(CalculatorLogger logger)
+    {
+        Logger = logger;
+    }
+    
     public void PerformDateCalculation()
     {
         DateTime inputDate = GetInputDate();
@@ -38,6 +45,19 @@ class DateCalculator
 
     private DateTime CalculateDate(DateTime inputDate, int numberOfDaysToAdd)
     {
-        return inputDate.AddDays(numberOfDaysToAdd);
+        DateTime resultantDate =  inputDate.AddDays(numberOfDaysToAdd);
+
+        LogCalculation(inputDate, numberOfDaysToAdd, resultantDate);
+        
+        return resultantDate;
+    }
+
+    private void LogCalculation(DateTime inputDate, int numberOfDaysToAdd, DateTime resultantDate)
+    {
+        string logMessage =
+            $"Input Date: {inputDate.ToShortDateString()}; Number of days to add: {numberOfDaysToAdd.ToString()}" +
+            $"; Resultant Date: {resultantDate.ToShortDateString()}";
+        
+        Logger.WriteLog("Date Calculator", logMessage);
     }
 }
