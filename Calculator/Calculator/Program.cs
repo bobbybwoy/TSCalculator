@@ -9,6 +9,8 @@ class Program
     public static void Main(string[] args)
     {
         PrintWelcomeMessage();
+        NumberCalculator numberCalculator = new NumberCalculator();
+        DateCalculator dateCalculator = new DateCalculator();
 
         while (true)
         {
@@ -17,9 +19,9 @@ class Program
                 // I also used Rider to refactor the functionality into
                 // separate classes, which is why the namespace is the
                 // way it is...
-                Calculator.NumberCalculator.PerformNumberCalculation();
+                numberCalculator.PerformNumberCalculation();
             else if (calculatorMode == DateCalculator)
-                Calculator.DateCalculator.PerformDateCalculation();
+                dateCalculator.PerformDateCalculation();
             else if (calculatorMode == Exit)
             {
                 Console.WriteLine("Goodbye!");

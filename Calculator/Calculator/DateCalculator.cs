@@ -2,7 +2,7 @@ namespace Calculator;
 
 class DateCalculator
 {
-    public static void PerformDateCalculation()
+    public void PerformDateCalculation()
     {
         DateTime inputDate = GetInputDate();
 
@@ -12,31 +12,21 @@ class DateCalculator
         Console.ReadLine();
     }
 
-    private static DateTime GetInputDate()
+    private DateTime GetInputDate()
     {
         DateTime inputDate;
-        // while (true)
-        // {
-        //     Console.Write("Please enter a date: ");
-        //     if (DateTime.TryParse(Console.ReadLine(), out inputDate))
-        //         return inputDate;
-        // }
+
         do
         {
             Console.Write("Please enter a date: ");
         } while (!DateTime.TryParse(Console.ReadLine(), out inputDate));
+        
         return inputDate;
     }
 
-    private static int GetNumberOfDaysToAdd()
+    private int GetNumberOfDaysToAdd()
     {
         int numberOfDaysToAdd = 0;
-        // while (true)
-        // {
-        //     Console.Write("Please enter the number of days to add: ");
-        //     if (int.TryParse(Console.ReadLine(), out numberOfDaysToAdd))
-        //         return numberOfDaysToAdd;
-        // }
 
         do
         {
@@ -46,7 +36,7 @@ class DateCalculator
         return numberOfDaysToAdd;
     }
 
-    private static DateTime CalculateDate(DateTime inputDate, int numberOfDaysToAdd)
+    private DateTime CalculateDate(DateTime inputDate, int numberOfDaysToAdd)
     {
         return inputDate.AddDays(numberOfDaysToAdd);
     }

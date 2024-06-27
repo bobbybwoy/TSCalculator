@@ -2,7 +2,7 @@ namespace Calculator;
 
 class NumberCalculator
 {
-    public static void PerformNumberCalculation()
+    public void PerformNumberCalculation()
     {
         string arithmeticOperator = GetOperator();
 
@@ -12,35 +12,22 @@ class NumberCalculator
 
         Console.WriteLine($"The answer is: {CalculateValue(arithmeticOperator, operands)}");
         Console.ReadLine();
-
-        /*
-         * I am not sure that I like all of the functionality is
-         * in one public method...
-         * I am quite happy told what the impact of having so many
-         * static methods in a class
-         */
-        // string GetOperator()
-        // {
-        //     Console.Write("Please enter the operator: ");
-        //     string arithmeticOperator = Console.ReadLine();
-        //     return arithmeticOperator;
-        // }
     }
 
-    private static string GetOperator()
+    private string GetOperator()
     {
         Console.Write("Please enter the operator: ");
         string arithmeticOperator = Console.ReadLine();
         return arithmeticOperator;
     }
 
-    private static int GetNumberOfOperands(string arithmeticOperator)
+    private int GetNumberOfOperands(string arithmeticOperator)
     {
         int numberOfOperands = GetInteger($"How many number do you want to {arithmeticOperator}?: ");
         return numberOfOperands;
     }
 
-    private static int[] GetOperands(int numberOfOperands)
+    private int[] GetOperands(int numberOfOperands)
     {
         int[] operands = new int[numberOfOperands];
 
@@ -52,7 +39,7 @@ class NumberCalculator
         return operands;
     }
 
-    private static int CalculateValue(string arithmeticOperator, int[] operands)
+    private int CalculateValue(string arithmeticOperator, int[] operands)
     {
         int result = 0;
 
@@ -80,7 +67,7 @@ class NumberCalculator
         return result;
     }
 
-    private static int GetInteger(string message)
+    private int GetInteger(string message)
     {
         int number = 0;
 
