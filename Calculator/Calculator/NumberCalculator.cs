@@ -13,9 +13,7 @@ class NumberCalculator
     {
         string arithmeticOperator = GetOperator();
 
-        int numberOfOperands = GetNumberOfOperands(arithmeticOperator);
-
-        int[] operands = GetOperands(numberOfOperands);
+        List<int> operands = GetOperands(arithmeticOperator);
 
         Console.WriteLine($"The answer is: {CalculateValue(arithmeticOperator, operands)}");
         Console.ReadLine();
@@ -34,73 +32,86 @@ class NumberCalculator
         
         return arithmeticOperator;
     }
-
-    private int GetNumberOfOperands(string arithmeticOperator)
+    
+    private List<int> GetOperands(string arithmeticOperator)
     {
-        int numberOfOperands = GetInteger($"How many number do you want to {arithmeticOperator}?: ");
-        return numberOfOperands;
-    }
+        List<int> operands = new List<int>();
 
-    private int[] GetOperands(int numberOfOperands)
-    {
-        int[] operands = new int[numberOfOperands];
-
-        for (int i = 0; i < operands.Length; i++)
+        Console.WriteLine($"Please enter the numbers to {arithmeticOperator}.");
+        while (true)
         {
-            operands[i] = GetInteger($"Please enter number {i + 1}: ");
+            int? operand = GetInteger("Please enter the next number: ");
+            if (!operand.HasValue) break;
+            
+            operands.Add(operand.Value);
         }
 
         return operands;
     }
 
-    private int CalculateValue(string arithmeticOperator, int[] operands)
+    private int CalculateValue(string arithmeticOperator, List<int> operands)
     {
         int result = 0;
 
-        foreach (int operand in operands)
+        if (arithmeticOperator == "+")
+            result = operands.Sum();
+        else if (arithmeticOperator == "-")
         {
-            // Set up result to be the first operand
-            if (result == 0)
-                result = operand;
-            else if (arithmeticOperator == "+")
-                result += operand;
-            else if (arithmeticOperator == "-")
-                result -= operand;
-            else if (arithmeticOperator == "*")
-                result *= operand;
-            else if (arithmeticOperator == "/")
-                result /= operand;
-            else
-                Console.WriteLine($"Operator {arithmeticOperator} is invalid.");
+            result = operands.First();
+            result = operands
+                .Skip(1)
+                .Aggregate(result,
+                    (aggregate, next) => aggregate -= next,
+                    aggregate => aggregate);
         }
+        else if (arithmeticOperator == "*")
+        {
+            result = operands.First();
+            result = operands
+                .Skip(1)
+                .Aggregate(result,
+                    (aggregate, next) => aggregate *= next,
+                    aggregate => aggregate);
+        }
+        else if (arithmeticOperator == "/")
+        {
+            result = operands.First();
+            result = operands
+                .Skip(1)
+                .Aggregate(result,
+                    (aggregate, next) => aggregate /= next,
+                    aggregate => aggregate);
+        }                
 
         LogCalculation(arithmeticOperator, operands, result);
 
         return result;
     }
 
-    private int GetInteger(string message)
+    private int? GetInteger(string message)
     {
         int number = 0;
+        string aNumber = "";
 
         do
         {
             Console.Write(message);
-        } while (!int.TryParse(Console.ReadLine(), out number));
+            aNumber = Console.ReadLine();
+            
+            if (aNumber == "") return null;
+            
+        } while (!int.TryParse(aNumber, out number));
 
         return number;
     }
 
-    private void LogCalculation(string arithmeticOperator, int[] operands, int result)
+    private void LogCalculation(string arithmeticOperator, List<int> operands, int result)
     {
-        string logMessage = $"Operator: {arithmeticOperator}; Operands:";
+        string logMessage = $"Operator: {arithmeticOperator}; Operands: [";
 
-        foreach (int operand in operands)
-        {
-                logMessage += $" {operand}";
-        }
+        operands.ForEach(operand => logMessage += $" {operand}");
 
-        logMessage += $"; Result: {result}";
+        logMessage += $" ]; Result: {result}";
         
         Logger.WriteLog("NumberCalculator", logMessage);
     }
