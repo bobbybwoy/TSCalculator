@@ -11,12 +11,27 @@ class NumberCalculator
     
     public void PerformNumberCalculation()
     {
-        string arithmeticOperator = GetOperator();
+        try
+        {
+            string arithmeticOperator = GetOperator();
 
-        List<int> operands = GetOperands(arithmeticOperator);
+            List<int> operands = GetOperands(arithmeticOperator);
 
-        Console.WriteLine($"The answer is: {CalculateValue(arithmeticOperator, operands)}");
-        Console.ReadLine();
+            Console.WriteLine($"The answer is: {CalculateValue(arithmeticOperator, operands)}");
+        }
+        catch (ArithmeticOperatorNotValidException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            Console.ReadLine();
+            Console.Clear();
+        }
     }
 
     private string GetOperator()
@@ -24,11 +39,10 @@ class NumberCalculator
         string[] operators = new string[] { "+", "-", "*", "/" };
         string arithmeticOperator = "";
 
-        do
-        {
-            Console.Write("Please enter the operator: ");
-            arithmeticOperator = Console.ReadLine();
-        } while (!operators.Contains(arithmeticOperator));
+        Console.Write("Please enter the operator: ");
+        arithmeticOperator = Console.ReadLine();
+        if (!operators.Contains(arithmeticOperator))
+            throw new ArithmeticOperatorNotValidException($"Operator \'{arithmeticOperator}\' is not valid");
         
         return arithmeticOperator;
     }
@@ -53,35 +67,36 @@ class NumberCalculator
     {
         int result = 0;
 
-        if (arithmeticOperator == "+")
-            result = operands.Sum();
-        else if (arithmeticOperator == "-")
+        switch (arithmeticOperator)
         {
-            result = operands.First();
-            result = operands
-                .Skip(1)
-                .Aggregate(result,
-                    (aggregate, next) => aggregate -= next,
-                    aggregate => aggregate);
-        }
-        else if (arithmeticOperator == "*")
-        {
-            result = operands.First();
-            result = operands
-                .Skip(1)
-                .Aggregate(result,
-                    (aggregate, next) => aggregate *= next,
-                    aggregate => aggregate);
-        }
-        else if (arithmeticOperator == "/")
-        {
-            result = operands.First();
-            result = operands
-                .Skip(1)
-                .Aggregate(result,
-                    (aggregate, next) => aggregate /= next,
-                    aggregate => aggregate);
-        }                
+            case "+":
+                result = operands.Sum();
+                break;
+            case "-":
+                result = operands.First();
+                result = operands
+                    .Skip(1)
+                    .Aggregate(result,
+                        (aggregate, next) => aggregate -= next,
+                        aggregate => aggregate);
+                break;
+            case "*":
+                result = operands.First();
+                result = operands
+                    .Skip(1)
+                    .Aggregate(result,
+                        (aggregate, next) => aggregate *= next,
+                        aggregate => aggregate);
+                break;
+            case "/":
+                result = operands.First();
+                result = operands
+                    .Skip(1)
+                    .Aggregate(result,
+                        (aggregate, next) => aggregate /= next,
+                        aggregate => aggregate);
+                break;
+        }            
 
         LogCalculation(arithmeticOperator, operands, result);
 
@@ -115,4 +130,12 @@ class NumberCalculator
         
         Logger.WriteLog("NumberCalculator", logMessage);
     }
+}
+
+public class ArithmeticOperatorNotValidException : Exception
+{
+    public ArithmeticOperatorNotValidException() : base() {}
+
+    public ArithmeticOperatorNotValidException(string message) : base(message){}
+    public ArithmeticOperatorNotValidException(string message, Exception inner) : base(message, inner) {}
 }

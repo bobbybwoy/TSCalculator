@@ -2,10 +2,6 @@
 
 class Program
 {
-    private const int NumberCalculator = 1;
-    private const int DateCalculator = 2;
-    private const int Exit = 3;
-
     public static void Main(string[] args)
     {
         CalculatorLogger logger = new CalculatorLogger();
@@ -17,19 +13,23 @@ class Program
 
         while (true)
         {
-            int calculatorMode = GetCalculatorMode();
-            
-            if (calculatorMode == NumberCalculator)
-                numberCalculator.PerformNumberCalculation();
-            else if (calculatorMode == DateCalculator)
-                dateCalculator.PerformDateCalculation();
-            else if (calculatorMode == Exit)
-            {
-                Console.WriteLine("Goodbye!");
+            CalculatorMode calculatorMode = GetCalculatorMode();
+
+            if (calculatorMode == CalculatorMode.Exit)
                 break;
+
+            switch (calculatorMode)
+            {
+                case CalculatorMode.NumberCalculator:
+                    numberCalculator.PerformNumberCalculation();
+                    break;
+                case CalculatorMode.DateCalculator:
+                    dateCalculator.PerformDateCalculation();
+                    break;
+                default:
+                    Console.WriteLine("Option invalid");
+                    break;
             }
-            else
-                Console.WriteLine("Option invalid");
         }
     }
 
@@ -39,15 +39,24 @@ class Program
         Console.WriteLine("=========================");
     }
 
-    private static int GetCalculatorMode()
+    private static CalculatorMode GetCalculatorMode()
     {
-        int calculatorMode = 0;
+        CalculatorMode calculatorMode;
+        
         Console.WriteLine("Choose calculator mode:");
         Console.WriteLine("\t1) Numbers");
         Console.WriteLine("\t2) Dates");
         Console.WriteLine("\t3) Exit");
         Console.Write("\nOption: ");
-        int.TryParse(Console.ReadLine(), out calculatorMode);
+        Enum.TryParse(Console.ReadLine(), out calculatorMode);
+        
         return calculatorMode;
     }
+}
+
+enum CalculatorMode
+{
+    NumberCalculator = 1,
+    DateCalculator = 2,
+    Exit = 3
 }
